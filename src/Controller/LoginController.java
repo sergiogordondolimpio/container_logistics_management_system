@@ -1,14 +1,14 @@
 package Controller;
 
 import Model.UserDAO;
-import View.Login;
+import View.LoginView;
 
 
 public class LoginController {
     private UserDAO userDAO;
-    private Login login;
+    private LoginView login;
 
-    public LoginController(UserDAO userDAO, Login login) {
+    public LoginController(UserDAO userDAO, LoginView login) {
         this.userDAO = userDAO;
         this.login = login;
 

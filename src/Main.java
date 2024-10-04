@@ -1,17 +1,33 @@
-import Controller.LoginController;
-import Model.UserDAO;
-import View.Login;
-import View.Menu;
+import View.MenuView;
+
+import javax.swing.*;
 
 
 public class Main {
+
+    private JPanel panel;
+
     public static void main(String[] args) {
 //        UserDAO userDAO = UserDAO.getInstance(); // Singleton pattern
-//        Login view = new Login();
-//        LoginController controller = new LoginController(userDAO, view);
-//        view.setController(controller);
+//        LoginView loginView = new LoginView();
+//        LoginController controller = new LoginController(userDAO, loginView);
+//        loginView.setController(controller);
 
-        new Menu();
+//        JFrame frame = new JFrame("App");
+//        frame.setContentPane(loginView.loginPanel);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.pack();
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+
+        JFrame frame = new JFrame("Sistema de Gestión de Contenedores y Logística");
+        frame.setContentPane(new MenuView().mainPanel);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+
 
     }
 }

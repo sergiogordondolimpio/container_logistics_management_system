@@ -1,5 +1,5 @@
 
-# Proyecto Base de Datos SGCL
+# Sistema de Gestión de Contenedores y Logística
 
 Este proyecto contiene los scripts SQL y el esquema de base de datos para el **Sistema de Gestión de Contenedores y Logística (SGCL)**. El proyecto incluye los comandos SQL necesarios para crear la base de datos, insertar datos iniciales y realizar consultas.
 
