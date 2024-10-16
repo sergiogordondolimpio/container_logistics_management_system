@@ -14,10 +14,10 @@ public class LoginView {
     private JButton btnCancel;
     private JLabel lblUser;
     private JLabel lblPassword;
-    private LoginController controller; // Controller variable
+    private LoginController controller;
 
     public LoginView() {
-        // Add action listeners for buttons
+        // Login
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -25,22 +25,25 @@ public class LoginView {
             }
         });
 
+        // Close the application
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);  // Close the application
+                System.exit(0);
             }
         });
     }
 
+    // Set the controller from outside
     public void setController(LoginController controller) {
-        this.controller = controller;  // Set the controller from outside
+        this.controller = controller;
     }
 
+    // Login
     private void handleLogin() {
         String username = txtUser.getText();
         String password = txtPass.getText();
-        controller.handleLogin(username, password);  // Delegate to controller
+        controller.handleLogin(username, password);
     }
 
     // Methods to display messages or interact with UI
@@ -48,6 +51,7 @@ public class LoginView {
         JOptionPane.showMessageDialog(null, message);
     }
 
+    // Close panel
     public void closeLogin() {
         // Close the login window
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(loginPanel);
@@ -56,6 +60,7 @@ public class LoginView {
         }
     }
 
+    // Open menu
     public void openMenu() {
         // Logic to open the menu window
         System.out.println("Menu opened.");

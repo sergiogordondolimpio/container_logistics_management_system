@@ -1,6 +1,6 @@
 package Controller;
 
-import Model.UserDAO;
+import DAO.UserDAO;
 import View.LoginView;
 
 

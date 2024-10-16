@@ -1,4 +1,4 @@
-package Model;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,6 @@ public class UserDAO {
     private static final String DB_PASSWORD = "Gou3Dusky@";
 
     private UserDAO() {
-        // Private constructor to prevent instantiation
     }
 
     public static UserDAO getInstance() {

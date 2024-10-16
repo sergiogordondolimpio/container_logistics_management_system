@@ -1,8 +1,11 @@
 package View;
 
+import Controller.ContainerController;
+import DAO.ContainerDAO;
 import View.Contents.DevanningView;
 import View.Contents.HomeView;
 import View.Contents.RegisterContainerView;
+import View.Contents.ReportView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +24,9 @@ public class MenuView {
     private JPanel contextPanel;
 
     public MenuView() {
+        // Ensure contextPanel has a CardLayout
+        contextPanel.setLayout(new CardLayout());
+
         // Get the CardLayout from the contextPanel
         CardLayout cardLayout = (CardLayout) contextPanel.getLayout();
         addViews();
@@ -31,7 +37,6 @@ public class MenuView {
             public void actionPerformed(ActionEvent e) {
                 cardLayout.show(contextPanel, "Home");
             }
-
         });
 
         btnContainerRegister.addActionListener(new ActionListener() {
@@ -47,6 +52,13 @@ public class MenuView {
                 cardLayout.show(contextPanel, "Devanning");
             }
         });
+
+        btnReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contextPanel, "Report");
+            }
+        });
     }
 
     public void addViews() {
@@ -56,3 +68,4 @@ public class MenuView {
         contextPanel.add(new DevanningView().getPanel(), "Devanning");
     }
 }
+
