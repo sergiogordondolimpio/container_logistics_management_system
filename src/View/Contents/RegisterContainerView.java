@@ -53,7 +53,7 @@ public class RegisterContainerView {
     private void populateStatusComboBox() {
         DefaultComboBoxModel<Status> model = new DefaultComboBoxModel<>();
         for (Status status : Status.values()) {
-            model.addElement(status); // Add each enum value
+            model.addElement(status);
         }
         cbStatus.setModel(model);
 
