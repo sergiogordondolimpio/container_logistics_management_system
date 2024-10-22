@@ -1,8 +1,11 @@
 package Controller;
 
 import DAO.UserDAO;
+import Manager.SessionManager;
 import View.LoginView;
 
+
+import Model.User;
 
 public class LoginController {
     private UserDAO userDAO;
@@ -15,9 +18,11 @@ public class LoginController {
         login.setController(this);
     }
 
-    // user: tu pass: pass
+    // user: su pass: 1234
     public void handleLogin(String username, String password) {
-        if (userDAO.authenticateUser(username, password)) {
+        User user = userDAO.authenticateUser(username, password);
+        if (user != null) {
+            SessionManager.getInstance().setLoggedInUser(user);
             login.showMessage("Login successful!");
             login.closeLogin();
             login.openMenu();
@@ -26,12 +31,5 @@ public class LoginController {
         }
     }
 
-    public void handleRegister(String username, String password) {
-        if (userDAO.registerUser(username, password)) {
-            login.showMessage("User registered successfully!");
-        } else {
-            login.showMessage("User registration failed.");
-        }
-    }
 }
 

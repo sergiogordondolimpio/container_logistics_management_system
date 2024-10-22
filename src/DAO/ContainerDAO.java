@@ -19,7 +19,7 @@ public class ContainerDAO {
         String sql = "INSERT INTO contenedor (ubicacion, estado, codigo, fecha_llegada) VALUES (?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, container.getLocation());
             statement.setString(2, container.getStatus());
@@ -28,14 +28,25 @@ public class ContainerDAO {
             LocalDateTime arriveDate = container.getArriveDate();
             statement.setTimestamp(4, java.sql.Timestamp.valueOf(arriveDate));
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        container.setIdContainer(generatedKeys.getInt(1));
+                    }
+                }
+            }
 
             return container;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
+
 
     // Return true if the code exist in database
     public boolean siCodeInDatabase(String code) {
@@ -107,5 +118,28 @@ public class ContainerDAO {
 
         return -1;
     }
+
+    public void updateHistoryMovementId(Integer containerId, Integer idMovementHistory) {
+        String sql = "UPDATE contenedor SET historial_movimiento_id = ? WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, idMovementHistory);
+            statement.setInt(2, containerId);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Successfully updated the historial_movimiento_id for container ID: " + containerId);
+            } else {
+                System.out.println("No container found with ID: " + containerId);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

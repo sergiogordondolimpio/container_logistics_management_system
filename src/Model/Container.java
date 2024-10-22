@@ -8,6 +8,7 @@ import java.time.LocalTime;
 public class Container {
 
     Integer idContainer;
+    Integer idMovementHistory;
     String location;
     String status;
     String code;
@@ -15,6 +16,14 @@ public class Container {
 
     public Integer getIdContainer() {
         return idContainer;
+    }
+
+    public Integer getIdMovementHistory() {
+        return idMovementHistory;
+    }
+
+    public void setIdMovementHistory(Integer idMovementHistory) {
+        this.idMovementHistory = idMovementHistory;
     }
 
     public void setIdContainer(Integer idContainer) {

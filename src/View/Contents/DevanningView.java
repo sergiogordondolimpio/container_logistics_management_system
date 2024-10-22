@@ -97,15 +97,19 @@ public class DevanningView {
     private void setTable() {
         Vector<String> columnNames = new Vector<>(Arrays.asList("Código", "Descripción", "Estatus", "Peso"));
 
-        Integer idContainer = containerController.getIdContainerByCode(cbContainer.getSelectedItem().toString());
-        List<Module> modules =  moduleController.getModulesByContainer(idContainer);
         Vector<Vector<Object>> data = new Vector<>();
 
-        for (Module module : modules) {
-            data.add(new Vector<>(Arrays.asList(
-                    module.getCode(), module.getDescription(), module.getStatus(), module.getWeight()
-            )));
+        if (cbContainer.getSelectedItem() != null) {
+            Integer idContainer = containerController.getIdContainerByCode(cbContainer.getSelectedItem().toString());
+            List<Module> modules =  moduleController.getModulesByContainer(idContainer);
+
+            for (Module module : modules) {
+                data.add(new Vector<>(Arrays.asList(
+                        module.getCode(), module.getDescription(), module.getStatus(), module.getWeight()
+                )));
+            }
         }
+
 
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         tbModules.setModel(model);

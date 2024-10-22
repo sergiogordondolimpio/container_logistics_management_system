@@ -1,7 +1,9 @@
 package View.Contents;
 
 import Controller.ContainerController;
+import Controller.MovementHistoryController;
 import Model.Container;
+import Model.MovementType;
 import Model.Status;
 import Utils.DateTimeUtil;
 import Validation.ContainerValidator;
@@ -27,9 +29,11 @@ public class RegisterContainerView {
     private JComboBox<Status> cbStatus;
     private Container container;
     private ContainerController containerController;
+    private MovementHistoryController movementHistoryController;
 
     public RegisterContainerView() {
 
+        movementHistoryController = new MovementHistoryController();
         containerController = new ContainerController();
         validator = new ContainerValidator(containerController);
         populateStatusComboBox();
@@ -92,10 +96,13 @@ public class RegisterContainerView {
         container.setCode(textCode.getText());
         container.setArriveDate(DateTimeUtil.createDateTime(txtDate.getText(), txtHour.getText()));
 
-        if (containerController.saveContainer(container) == null) {
+        container.setIdContainer(containerController.saveContainer(container).getIdContainer());
+        if (container.getIdContainer() == null) {
             JOptionPane.showMessageDialog(null, "Error: El contenedor no pudo ser agregado!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "¡El contenedor fue agregado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            Integer idMovementHistory = movementHistoryController.save(MovementType.CONTAINER_RETISTER.getLabel());
+            containerController.updateHistoryMovementId(container.getIdContainer(), idMovementHistory);
         }
 
     }

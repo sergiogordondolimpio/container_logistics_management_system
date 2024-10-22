@@ -29,5 +29,9 @@ public class ContainerController {
     public Integer getIdContainerByCode(String code) {
         return containerDAO.getIdContainerByCode(code);
     }
+
+    public void updateHistoryMovementId(Integer containerId, Integer idMovementHistory) {
+        containerDAO.updateHistoryMovementId(containerId, idMovementHistory);
+    }
 }
 

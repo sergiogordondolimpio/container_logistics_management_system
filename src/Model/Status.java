@@ -3,7 +3,7 @@ package Model;
 public enum Status {
     IN_PROGRESS("En Progreso"),
     REGISTERED("Registrado"),
-    CANCEL("Cancelado");
+    CANCEL("Anulado");
 
     private String label;
 

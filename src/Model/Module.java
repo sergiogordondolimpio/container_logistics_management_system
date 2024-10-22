@@ -6,6 +6,7 @@ public class Module {
 
     Integer idModule;
     Integer idContainer;
+    Integer idMovementHistory;
     String description;
     String status;
     String code;
@@ -14,13 +15,12 @@ public class Module {
     public Module() {
     }
 
-    public Module(Integer idModule, Integer idContainer, String description, String status, String code, Float weight) {
-        this.idModule = idModule;
-        this.idContainer = idContainer;
-        this.description = description;
-        this.status = status;
-        this.code = code;
-        this.weight = weight;
+    public Integer getIdMovementHistory() {
+        return idMovementHistory;
+    }
+
+    public void setIdMovementHistory(Integer idMovementHistory) {
+        this.idMovementHistory = idMovementHistory;
     }
 
     public Integer getIdModule() {

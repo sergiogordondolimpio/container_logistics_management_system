@@ -1,5 +1,7 @@
 package DAO;
 
+import Model.User;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,37 +24,28 @@ public class UserDAO {
         return instance;
     }
 
-    public boolean authenticateUser(String username, String password) {
-        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+    public User authenticateUser(String username, String password) {
+        User user = new User();
+        String query = "SELECT id, nombre, contraseña FROM operador WHERE nombre = ? AND contraseña = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
              PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, username);
             pstmt.setString(2, password);
 
-            ResultSet rs = pstmt.executeQuery();
-            return rs.next();
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                while (resultSet.next()) {
+                    user.setUsername(resultSet.getString("nombre"));
+                    user.setPassword(resultSet.getString("contraseña"));
+                    user.setId(resultSet.getInt("id"));
+                }
+            }
+            return user;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return user;
         }
     }
 
-    public boolean registerUser(String username, String password) {
-        String query = "INSERT INTO users (username, password) VALUES (?, ?)";
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-
-            int rowsInserted = pstmt.executeUpdate();
-            return rowsInserted > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }

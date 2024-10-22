@@ -61,11 +61,12 @@ public class MenuView {
         });
     }
 
+    // Add views to the CardLayout
     public void addViews() {
-        // Add views to the CardLayout
         contextPanel.add(new HomeView().getPanel(), "Home");
         contextPanel.add(new RegisterContainerView().getPanel(), "ContainerRegister");
         contextPanel.add(new DevanningView().getPanel(), "Devanning");
+        contextPanel.add(new ReportView().getPanel(), "Report");
     }
 }
 
