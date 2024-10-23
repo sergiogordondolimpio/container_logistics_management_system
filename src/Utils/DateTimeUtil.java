@@ -12,4 +12,10 @@ public class DateTimeUtil {
         return LocalDateTime.parse(dateTimeString, formatter);
     }
 
+    // Convert LocalDateTime a date and time string
+    public static String formatLocalDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dateTime.format(formatter);
+    }
+
 }

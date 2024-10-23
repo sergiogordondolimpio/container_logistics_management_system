@@ -1,7 +1,7 @@
 package Model;
 
 public enum MovementType {
-    CONTAINER_RETISTER("Registro de container"),
+    CONTAINER_REGISTER("Registro de container"),
     DEVANNING("Devanning"),
     UNPACKING("Unpacking");
 

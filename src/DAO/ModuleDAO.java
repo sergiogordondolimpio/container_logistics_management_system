@@ -20,7 +20,7 @@ public class ModuleDAO {
         String sql = "INSERT INTO modulo (contenedor_id, descripcion, peso, estado, codigo) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS))  {
 
             statement.setInt(1, module.getIdContainer());
             statement.setString(2, module.getDescription());
@@ -28,7 +28,15 @@ public class ModuleDAO {
             statement.setString(4, module.getStatus());
             statement.setString(5, module.getCode());
 
-            statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        module.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
 
             return module;
         } catch (SQLException e) {
@@ -70,7 +78,7 @@ public class ModuleDAO {
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     Module module = new Module();
-                    module.setIdModule(resultSet.getInt("id"));
+                    module.setId(resultSet.getInt("id"));
                     module.setCode(resultSet.getString("codigo"));
                     module.setStatus(resultSet.getString("estado"));
                     module.setIdContainer(resultSet.getInt("contenedor_id"));
@@ -102,5 +110,27 @@ public class ModuleDAO {
         }
 
         return false;
+    }
+
+    public void updateHistoryMovementId(Integer idModule, Integer idMovementHistory) {
+        String sql = "UPDATE modulo SET historial_movimiento_id = ? WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, idMovementHistory);
+            statement.setInt(2, idModule);
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Successfully updated the historial_movimiento_id for module ID: " + idModule);
+            } else {
+                System.out.println("No module found with ID: " + idModule);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

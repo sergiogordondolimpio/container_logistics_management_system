@@ -33,7 +33,7 @@ public class ContainerDAO {
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        container.setIdContainer(generatedKeys.getInt(1));
+                        container.setId(generatedKeys.getInt(1));
                     }
                 }
             }
@@ -84,7 +84,7 @@ public class ContainerDAO {
                     Container container = new Container();
                     container.setCode(resultSet.getString("codigo"));
                     container.setLocation(resultSet.getString("ubicacion"));
-                    container.setIdContainer(resultSet.getInt("id"));
+                    container.setId(resultSet.getInt("id"));
                     container.setStatus(resultSet.getString("estado"));
                     container.setArriveDate(resultSet.getDate("fecha_llegada"));
                     containers.add(container);
@@ -141,5 +141,30 @@ public class ContainerDAO {
         }
     }
 
+    public Container getContainerByCode(String code) {
+        Container container = new Container();
+        String sql = "SELECT codigo, ubicacion, id, estado, fecha_llegada FROM contenedor WHERE codigo = ?";
+
+        try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, code);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    container.setCode(resultSet.getString("codigo"));
+                    container.setLocation(resultSet.getString("ubicacion"));
+                    container.setId(resultSet.getInt("id"));
+                    container.setStatus(resultSet.getString("estado"));
+                    container.setArriveDate(resultSet.getTimestamp("fecha_llegada").toLocalDateTime());
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return container;
+    }
 }
 

@@ -5,30 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Container {
+public class Container extends StorageUnit {
 
-    Integer idContainer;
-    Integer idMovementHistory;
     String location;
-    String status;
-    String code;
     LocalDateTime arriveDate;
-
-    public Integer getIdContainer() {
-        return idContainer;
-    }
-
-    public Integer getIdMovementHistory() {
-        return idMovementHistory;
-    }
-
-    public void setIdMovementHistory(Integer idMovementHistory) {
-        this.idMovementHistory = idMovementHistory;
-    }
-
-    public void setIdContainer(Integer idContainer) {
-        this.idContainer = idContainer;
-    }
 
     public String getLocation() {
         return location;
@@ -36,22 +16,6 @@ public class Container {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public LocalDateTime getArriveDate() {

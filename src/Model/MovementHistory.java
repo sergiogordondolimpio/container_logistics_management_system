@@ -1,12 +1,16 @@
 package Model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class MovementHistory {
 
     Integer id;
-    Date date;
+    LocalDateTime date;
     String type;
+    Integer idItem;
+    String itemType;
+    Integer idOperator;
 
     public MovementHistory() {
     }
@@ -19,11 +23,11 @@ public class MovementHistory {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
@@ -35,4 +39,27 @@ public class MovementHistory {
         this.type = type;
     }
 
+    public Integer getIdItem() {
+        return idItem;
+    }
+
+    public void setIdItem(Integer idItem) {
+        this.idItem = idItem;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+    public Integer getIdOperator() {
+        return idOperator;
+    }
+
+    public void setIdOperator(Integer idOperator) {
+        this.idOperator = idOperator;
+    }
 }

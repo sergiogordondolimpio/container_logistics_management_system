@@ -25,6 +25,7 @@ public class SessionManager {
         //return loggedInUser;
         User user = new User();
         user.setId(1);
+        user.setUsername("su");
         return user;
     }
 

@@ -2,6 +2,9 @@ package Controller;
 
 
 import DAO.MovementHistoryDAO;
+import Model.MovementHistory;
+
+import java.util.List;
 
 public class MovementHistoryController {
 
@@ -11,8 +14,12 @@ public class MovementHistoryController {
         this.movementHistoryDAO = new MovementHistoryDAO();
     }
 
-    public Integer save(String type) {
-        return movementHistoryDAO.save(type);
+    public Integer save(String type, Integer idItem, String typeItem) {
+        return movementHistoryDAO.save(type, idItem, typeItem);
+    }
+
+    public List<MovementHistory> getHistoryByIdItem(Integer id, String itemType) {
+        return movementHistoryDAO.getHistoryByIdItem(id, itemType);
     }
 }
 

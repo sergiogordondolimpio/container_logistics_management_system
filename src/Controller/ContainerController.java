@@ -30,8 +30,8 @@ public class ContainerController {
         return containerDAO.getIdContainerByCode(code);
     }
 
-    public void updateHistoryMovementId(Integer containerId, Integer idMovementHistory) {
-        containerDAO.updateHistoryMovementId(containerId, idMovementHistory);
+    public Container getContainerByCode(String code) {
+        return containerDAO.getContainerByCode(code);
     }
 }
 

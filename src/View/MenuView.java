@@ -22,12 +22,15 @@ public class MenuView {
     private JButton btnReport;
     private JButton btnGetStatus;
     private JPanel contextPanel;
+    private DevanningView devanningView;
+    private ReportView reportView;
 
     public MenuView() {
-        // Ensure contextPanel has a CardLayout
+        devanningView = new DevanningView();
+        reportView = new ReportView();
+
         contextPanel.setLayout(new CardLayout());
 
-        // Get the CardLayout from the contextPanel
         CardLayout cardLayout = (CardLayout) contextPanel.getLayout();
         addViews();
 
@@ -49,6 +52,7 @@ public class MenuView {
         btnDevanning.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                devanningView.populateContainerComboBox();
                 cardLayout.show(contextPanel, "Devanning");
             }
         });
@@ -56,6 +60,7 @@ public class MenuView {
         btnReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                reportView.populateContainerComboBox();
                 cardLayout.show(contextPanel, "Report");
             }
         });
@@ -65,8 +70,8 @@ public class MenuView {
     public void addViews() {
         contextPanel.add(new HomeView().getPanel(), "Home");
         contextPanel.add(new RegisterContainerView().getPanel(), "ContainerRegister");
-        contextPanel.add(new DevanningView().getPanel(), "Devanning");
-        contextPanel.add(new ReportView().getPanel(), "Report");
+        contextPanel.add(devanningView.getPanel(), "Devanning");
+        contextPanel.add(reportView.getPanel(), "Report");
     }
 }
 

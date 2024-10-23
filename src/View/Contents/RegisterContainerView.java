@@ -3,6 +3,7 @@ package View.Contents;
 import Controller.ContainerController;
 import Controller.MovementHistoryController;
 import Model.Container;
+import Model.ItemType;
 import Model.MovementType;
 import Model.Status;
 import Utils.DateTimeUtil;
@@ -96,13 +97,12 @@ public class RegisterContainerView {
         container.setCode(textCode.getText());
         container.setArriveDate(DateTimeUtil.createDateTime(txtDate.getText(), txtHour.getText()));
 
-        container.setIdContainer(containerController.saveContainer(container).getIdContainer());
-        if (container.getIdContainer() == null) {
+        container.setId(containerController.saveContainer(container).getId());
+        if (container.getId() == null) {
             JOptionPane.showMessageDialog(null, "Error: El contenedor no pudo ser agregado!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "¡El contenedor fue agregado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            Integer idMovementHistory = movementHistoryController.save(MovementType.CONTAINER_RETISTER.getLabel());
-            containerController.updateHistoryMovementId(container.getIdContainer(), idMovementHistory);
+            movementHistoryController.save(MovementType.CONTAINER_REGISTER.getLabel(), container.getId(), ItemType.CONTAINER.getLabel());
         }
 
     }

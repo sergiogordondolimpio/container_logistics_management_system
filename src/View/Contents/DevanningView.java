@@ -2,9 +2,9 @@ package View.Contents;
 
 import Controller.ContainerController;
 import Controller.ModuleController;
+import Controller.MovementHistoryController;
+import Model.*;
 import Model.Container;
-import Model.Module;
-import Model.Status;
 import Validation.ModuleValidator;
 import Validation.Validator;
 
@@ -35,9 +35,10 @@ public class DevanningView {
     private ContainerController containerController;
     private ModuleController moduleController;
     private ModuleValidator validator;
-
+    private MovementHistoryController movementHistoryController;
 
     public DevanningView() {
+        movementHistoryController = new MovementHistoryController();
         containerController = new ContainerController();
         moduleController = new ModuleController();
         validator = new ModuleValidator(moduleController);
@@ -122,7 +123,7 @@ public class DevanningView {
     }
 
     // Populate the combo box with the containers get from database
-    private void populateContainerComboBox() {
+    public void populateContainerComboBox() {
 
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         List<Container> containers = containerController.getAllContainers();
@@ -187,11 +188,12 @@ public class DevanningView {
         module.setWeight(Float.parseFloat(txtWeight.getText()));
         module.setIdContainer(containerController.getIdContainerByCode(cbContainer.getSelectedItem().toString()));
 
-        if (moduleController.save(module) == null) {
+        module.setIdContainer(moduleController.save(module).getIdContainer());
+        if (module.getId() == null) {
             JOptionPane.showMessageDialog(null, "Error: El módulo no pudo ser agregado!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(null, "¡El módulo fue agregado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            setTable();
+            movementHistoryController.save(MovementType.DEVANNING.getLabel(), module.getId(), ItemType.MODULE.getLabel());
         }
 
     }
