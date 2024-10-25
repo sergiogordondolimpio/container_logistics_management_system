@@ -23,24 +23,74 @@ A continuación se encuentran los comandos SQL necesarios para la creación de l
 
 ```sql
 CREATE DATABASE sgcl_db;
+
 USE sgcl_db;
 
 -- Creación de tablas
 
 CREATE TABLE operador (
-    id INT PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100),
-    apellido VARCHAR(100)
+    contraseña VARCHAR(100)
 );
 
-CREATE TABLE rol (
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100)
+CREATE TABLE historial_movimiento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    operador_id INT,
+    fecha TIMESTAMP,
+    tipo VARCHAR(50),
+    item_id INT,
+    item_type VARCHAR(50),
+    FOREIGN KEY (operador_id) REFERENCES operador(id)
+);
+
+CREATE TABLE contenedor (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    codigo VARCHAR(50),
+    estado VARCHAR(50),
+    ubicacion VARCHAR(100),
+    fecha_llegada TIMESTAMP
+);
+
+CREATE TABLE modulo (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    contenedor_id INT,
+    codigo VARCHAR(50),
+    descripcion VARCHAR(100),
+    estado VARCHAR(50),
+    peso FLOAT,
+    FOREIGN KEY (contenedor_id) REFERENCES contenedor(id)
+);
+
+CREATE TABLE caja (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    modulo_id INT,
+    codigo VARCHAR(50),
+    estado VARCHAR(50),
+    contenido VARCHAR(100),
+    FOREIGN KEY (modulo_id) REFERENCES modulo(id)
+);
+
+CREATE TABLE ruta (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    caja_id INT,
+    origen VARCHAR(100),
+    destino VARCHAR(100),
+    tiempo_estimado VARCHAR(100),
+    urgencia VARCHAR(50),
+    FOREIGN KEY (caja_id) REFERENCES caja(id)
 );
 
 CREATE TABLE permiso (
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100)
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    descripcion VARCHAR(100)
+);
+
+CREATE TABLE rol (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    descripcion VARCHAR(100)
 );
 
 CREATE TABLE operador_rol (
@@ -59,60 +109,8 @@ CREATE TABLE rol_permiso (
     FOREIGN KEY (permiso_id) REFERENCES permiso(id)
 );
 
-CREATE TABLE ubicacion (
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100),
-    direccion VARCHAR(200)
-);
-
-CREATE TABLE contenedor (
-    id INT PRIMARY KEY,
-    ubicacion_id INT,
-    codigo VARCHAR(100),
-    estado VARCHAR(50),
-    FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(id)
-);
-
-CREATE TABLE modulo (
-    id INT PRIMARY KEY,
-    contenedor_id INT,
-    nombre VARCHAR(100),
-    FOREIGN KEY (contenedor_id) REFERENCES contenedor(id)
-);
-
-CREATE TABLE caja (
-    id INT PRIMARY KEY,
-    modulo_id INT,
-    nombre VARCHAR(100),
-    FOREIGN KEY (modulo_id) REFERENCES modulo(id)
-);
-
-CREATE TABLE ruta (
-    id INT PRIMARY KEY,
-    nombre VARCHAR(100)
-);
-
-CREATE TABLE historial_movimiento (
-    id INT PRIMARY KEY,
-    caja_id INT,
-    operador_id INT,
-    ubicacion_id INT,
-    ruta_id INT,
-    fecha_movimiento DATE,
-    FOREIGN KEY (caja_id) REFERENCES caja(id),
-    FOREIGN KEY (operador_id) REFERENCES operador(id),
-    FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(id),
-    FOREIGN KEY (ruta_id) REFERENCES ruta(id)
-);
-```
-
-## Inserción de Datos
-
-Los siguientes comandos SQL insertan los datos iniciales en las tablas:
-
-```sql
-INSERT INTO operador (id, nombre, apellido) VALUES (1, 'Juan', 'Perez');
-INSERT INTO operador (id, nombre, apellido) VALUES (2, 'Maria', 'Lopez');
+INSERT INTO operador (nombre, contraseña) VALUES ('su', '1234') ;
+INSERT INTO operador (nombre, contraseña) VALUES ('Juan', '1245');
 
 INSERT INTO rol (id, nombre) VALUES (1, 'Admin');
 INSERT INTO rol (id, nombre) VALUES (2, 'Operador');
@@ -127,58 +125,6 @@ INSERT INTO rol_permiso (rol_id, permiso_id) VALUES (1, 1);
 INSERT INTO rol_permiso (rol_id, permiso_id) VALUES (1, 2);
 INSERT INTO rol_permiso (rol_id, permiso_id) VALUES (2, 1);
 
-INSERT INTO ubicacion (id, nombre, direccion) VALUES (1, 'Deposito A', 'Calle Falsa 123');
-INSERT INTO ubicacion (id, nombre, direccion) VALUES (2, 'Deposito B', 'Avenida Siempre Viva 742');
-
-INSERT INTO contenedor (id, ubicacion_id, codigo, estado) VALUES (1, 1, 'CONT-001', 'Activo');
-INSERT INTO contenedor (id, ubicacion_id, codigo, estado) VALUES (2, 2, 'CONT-002', 'Inactivo');
-
-INSERT INTO modulo (id, contenedor_id, nombre) VALUES (1, 1, 'Modulo 1');
-INSERT INTO modulo (id, contenedor_id, nombre) VALUES (2, 2, 'Modulo 2');
-
-INSERT INTO caja (id, modulo_id, nombre) VALUES (1, 1, 'Caja 1');
-INSERT INTO caja (id, modulo_id, nombre) VALUES (2, 2, 'Caja 2');
-
-INSERT INTO ruta (id, nombre) VALUES (1, 'Ruta Norte');
-INSERT INTO ruta (id, nombre) VALUES (2, 'Ruta Sur');
-
-INSERT INTO historial_movimiento (id, caja_id, operador_id, ubicacion_id, ruta_id, fecha_movimiento)
-VALUES (1, 1, 1, 1, 1, '2024-09-26');
-INSERT INTO historial_movimiento (id, caja_id, operador_id, ubicacion_id, ruta_id, fecha_movimiento)
-VALUES (2, 2, 2, 2, 2, '2024-09-26');
-```
-
-## Consultas SQL de Ejemplo
-
-1. Consultar todos los movimientos de una caja específica:
-
-```sql
-SELECT hm.id, hm.fecha_movimiento, o.nombre AS operador, u.nombre AS ubicacion, r.nombre AS ruta
-FROM historial_movimiento hm
-JOIN operador o ON hm.operador_id = o.id
-JOIN ubicacion u ON hm.ubicacion_id = u.id
-JOIN ruta r ON hm.ruta_id = r.id
-WHERE hm.caja_id = 1;
-```
-
-2. Consultar permisos asociados a un rol:
-
-```sql
-SELECT r.nombre AS rol, p.nombre AS permiso
-FROM rol r
-JOIN rol_permiso rp ON r.id = rp.rol_id
-JOIN permiso p ON rp.permiso_id = p.id
-WHERE r.id = 1;
-```
-
-3. Consultar cajas en un contenedor específico:
-
-```sql
-SELECT c.nombre AS caja, m.nombre AS modulo, cont.codigo AS contenedor
-FROM caja c
-JOIN modulo m ON c.modulo_id = m.id
-JOIN contenedor cont ON m.contenedor_id = cont.id
-WHERE cont.id = 1;
 ```
 
 ## Capturas de Pantalla
