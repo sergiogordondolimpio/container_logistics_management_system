@@ -72,6 +72,35 @@ public class DevanningView {
                 deleteModule();
             }
         });
+
+        tbModules.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int selectedRow = tbModules.getSelectedRow();
+
+                if (selectedRow != -1) {
+
+                    setInputs(selectedRow);
+
+                }
+            }
+        });
+
+    }
+
+    private void setInputs(int selectedRow) {
+        String code = tbModules.getValueAt(selectedRow, 0).toString();
+        String description = tbModules.getValueAt(selectedRow, 1).toString();
+        String status = tbModules.getValueAt(selectedRow, 2).toString();
+        String weight = tbModules.getValueAt(selectedRow, 3).toString();
+
+        txtCode.setText(code);
+        txtCode.setEditable(false);  // Make code field non-editable
+        txtDescription.setText(description);
+        cbStatus.setSelectedItem(status);
+        txtWeight.setText(weight);
+
+        btnAdd.setText("Modificar");
     }
 
     private void deleteModule() {
@@ -86,9 +115,7 @@ public class DevanningView {
                 JOptionPane.showMessageDialog(null, "Error: El módulo no pudo ser eliminado!", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-
         } else {
-            // No row is selected
             JOptionPane.showMessageDialog(null, "No row selected!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -165,10 +192,12 @@ public class DevanningView {
     }
 
     private void setModule() {
-        List<Validator> validations = Arrays.asList(
+            boolean editModule = txtCode.isEditable();
+
+            List<Validator> validations = Arrays.asList(
                 () -> validator.validateRequiredFields(txtCode.getText(), txtDescription.getText(), txtWeight.getText()),
-                () -> validator.validateCode(txtCode.getText()),
-                () -> validator.isCodeUnique(txtCode.getText()),
+                () -> editModule ? validator.isCodeUnique(txtCode.getText()) : null,
+                () -> editModule ? validator.isCodeUnique(txtCode.getText()) : null,
                 () -> validator.validateNumberWithDecimal(txtWeight.getText())
         );
 
@@ -185,6 +214,29 @@ public class DevanningView {
         module.setStatus(cbStatus.getSelectedItem().toString());
         module.setCode(txtCode.getText());
         module.setWeight(Float.parseFloat(txtWeight.getText()));
+
+        if (editModule) {
+            saveModule(module);
+        } else {
+            updateModule(module);
+        }
+
+    }
+
+    private void updateModule(Module module) {
+        module.setIdContainer(containerController.getIdContainerByCode(cbContainer.getSelectedItem().toString()));
+        module = moduleController.updateModuleByCode(module);
+        if (module == null) {
+            JOptionPane.showMessageDialog(null, "Error: El módulo no pudo ser modificado!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "¡El módulo fue modificado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            movementHistoryController.save(MovementType.DEVANNING.getLabel(), module.getId(), ItemType.MODULE.getLabel());
+            setTable();
+            clearFields();
+        }
+    }
+
+    private void saveModule(Module module) {
         module.setIdContainer(containerController.getIdContainerByCode(cbContainer.getSelectedItem().toString()));
 
         module.setIdContainer(moduleController.save(module).getIdContainer());
@@ -193,9 +245,11 @@ public class DevanningView {
         } else {
             JOptionPane.showMessageDialog(null, "¡El módulo fue agregado con éxito!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             movementHistoryController.save(MovementType.DEVANNING.getLabel(), module.getId(), ItemType.MODULE.getLabel());
+            setTable();
+            clearFields();
         }
-
     }
+
 
     // Show error dialogs
     private void showErrorDialog(String errorMessage) {
@@ -207,6 +261,9 @@ public class DevanningView {
         txtDescription.setText("");
         cbStatus.setSelectedIndex(0);
         txtWeight.setText("");
+
+        txtCode.setEditable(true);
+        btnAdd.setText("Agregar");
     }
 
     public JPanel getPanel() {

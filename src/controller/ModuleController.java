@@ -30,4 +30,7 @@ public class ModuleController {
         return moduleDAO.deleteByCode(code);
     }
 
+    public Module updateModuleByCode(Module module) {
+        return moduleDAO.updateModuleByCode(module);
+    }
 }
